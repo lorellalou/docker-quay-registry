@@ -1,0 +1,27 @@
+postgres:
+  image: postgres:9.5
+  environment:
+    POSTGRES_USER: quayregistry
+    POSTGRES_PASSWORD: password
+  volumes:
+    - /data/postgres:/var/lib/postgresql/data
+  ports:
+    - "5432:5432"
+redis:
+  image: quay.io/quay/redis
+  ports:
+    - "6379:6379"
+registry:
+  image: quay.io/coreos/registry
+  privileged: true
+  restart: always  
+  volumes:
+    - /data/quay/config:/conf/stack
+    - /data/quay/storage:/datastorage 
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - postgres
+    - redis
+  
